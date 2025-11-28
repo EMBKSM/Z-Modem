@@ -1,96 +1,97 @@
-# Project Specification (v1.1)
-
-## Project Name: **Z-Modem**
+# Project Specification (v1.2): Project Constellation
 ### Subtitle: FPGA-based Secure QPSK Image Transceiver
 
----
+## 1. 시스템 개요 및 설계 목표 (System Overview)
+본 프로젝트는 PC(Host)로부터 수신한 이미지 데이터를 **AES-128 암호화** 및 **QPSK 변조**하여 송신하고, 수신 측에서 **동기화(Synchronization) 및 복호화**를 수행하는 Full-Duplex 통신 시스템이다.
 
-## 1. 개요 (Project Overview)
-본 프로젝트는 PC로부터 전송된 이미지 데이터를 FPGA 내부에서 **하드웨어 가속 기반의 암호화(AES-128)**를 거친 후, **QPSK 변조**하여 무선 환경(Channel)으로 송신한다. 수신부는 이를 **복조(Demodulation) 및 동기화(Synchronization)**하고 **복호화(Decryption)**하여 원본 이미지를 복원한다. 이를 통해 **보안성이 강화된 실시간 디지털 데이터 송수신 시스템**을 구현하는 것을 최종 목표로 한다.
-
----
-
-## 2. 시스템 아키텍처 (System Architecture)
-
-전체 데이터 흐름(Dataflow)은 **[Security Layer]**가 추가된 구조를 갖는다.
-
-```text
-[PC (Tx)] 
-   | (Image Binary)
-   v
-[UART RX] -> [ FIFO & Batcher ] -> [ AES-128 Encryption ] -> [ Symbol Splitter ] -> [ QPSK Modulator ]
-                                                                                         |
-                                                                                    (Channel: AWGN/Offset)
-                                                                                         |
-[UART TX] <- [ Decrypt Buffer ] <- [ AES-128 Decryption ] <- [ Symbol Decision ] <- [ QPSK Demodulator ]
-   |                                                                                (Costas/Gardner Loop)
-   v
-[PC (Rx)] (Image Restore)
-```
-
-### 2.1 상세 데이터 흐름 (Data Path)
-AES-128은 **128비트(16바이트)** 단위로 동작하므로, 데이터 폭(Width) 변환 및 버퍼링이 핵심이다.
-
-1.  **Buffering (SIPO):** UART(8-bit)로 들어오는 데이터를 16바이트 모아 **128-bit Block** 생성.
-2.  **Encryption:** `128-bit Plaintext` + `Key` $\rightarrow$ **AES Core** $\rightarrow$ `128-bit Ciphertext`.
-3.  **Serialization (PISO):** 암호문을 2-bit 단위로 쪼개어 QPSK 변조기로 전달.
-4.  **Channel & Demodulation:** 노이즈와 위상 오차가 있는 채널을 통과한 뒤, 동기화 루프를 통해 심볼 복원.
-5.  **Decryption:** 복원된 비트를 다시 128-bit로 모아 AES 복호화 수행 후 PC로 전송.
+* **핵심 목표:** 115,200 bps의 비동기식 UART 데이터를 100 MHz 동기식 내부 로직으로 처리할 때 발생하는 **CDC(Clock Domain Crossing) 및 속도 차이(Throughput Mismatch)를 해결**하고, 채널 노이즈를 극복하는 **Robust한 수신 알고리즘**을 구현한다.
 
 ---
 
-## 3. 하드웨어 사양 (H/W Specification)
+## 2. 입출력 구조 및 인터페이스 (I/O Structure & Interface)
 
-| 항목 | 상세 사양 | 비고 |
-| :--- | :--- | :--- |
-| **FPGA Board** | Zybo Z7-20 (Zynq-7000) | PL(Programmable Logic) 활용 |
-| **System Clock** | 100 MHz | AES Core 및 Modem 동작 클럭 |
-| **Interface** | UART (Over USB) | Baudrate: **115200 bps** |
-| **Security** | **AES-128** (Advanced Encryption Standard) | **ECB or CTR Mode** (RTL 직접 구현) |
-| **Modulation** | QPSK (Quadrature PSK) | Carrier Freq: **1 MHz** |
-| **Synchronization** | **Costas Loop** (Carrier Recovery)<br>**Gardner Loop** (Timing Recovery) | 수신부 핵심 알고리즘 (독립 클럭 도메인 가정) |
-| **Filter** | Root Raised Cosine (RRC) | 대역폭 제한 및 ISI 제거 |
+### 2.1 외부 인터페이스 (External Interface)
+| 구분 | 신호명 | 방향 | 사양 (Spec) | 역할 |
+| :--- | :--- | :---: | :--- | :--- |
+| **System** | `sys_clk` | Input | 100 MHz | PL Main Clock |
+| | `sys_reset` | Input | Active High | Global Synchronous Reset |
+| **Data Link** | `uart_rx` | Input | 115200 bps | PC $\rightarrow$ FPGA 데이터 수신 |
+| | `uart_tx` | Output | 115200 bps | FPGA $\rightarrow$ PC 데이터 송신 |
+| **RF Out** | `dac_data` | Output | 16-bit Signed | 변조된 I/Q 합산 파형 ($I\cos - Q\sin$) |
 
----
+### 2.2 내부 데이터 흐름 및 버스 규격 (Internal Dataflow)
+시스템은 **데이터 폭이 변환되는 3단계 파이프라인**으로 구성된다.
 
-## 4. 암호화 시나리오 (Security Scenario)
-
-* **알고리즘:** **AES-128** (표준 대칭키 암호화 알고리즘)
-* **Key Management:**
-    * **Step 1:** Tx와 Rx 모듈 내부에 **동일한 128-bit Master Key를 하드코딩**하여 사용.
-    * **Step 2 (Advanced):** 외부 스위치(Dip Switch)나 UART 명령어를 통한 키 변경 기능 구현 고려.
-* **검증 포인트:**
-    * **Sniffing Test:** 암호화된 상태(Channel 상의 신호)를 복조하여 데이터를 확인했을 때, 원본 이미지가 아닌 **Random Noise** 형태여야 함.
-    * **Restoration Test:** 정상적인 복호화 과정을 거친 경우에만 깨끗한 원본 이미지가 출력되어야 함.
-
----
-
-## 5. 소프트웨어 사양 (S/W Specification)
-
-FPGA 검증 및 데이터 송수신을 위한 PC 측 Python 스크립트.
-
-1.  **Tx Script (Image Loader):**
-    * 이미지 파일(.jpg/.png) 로드 및 흑백(Grayscale) 변환.
-    * 128-bit(16 Byte) 단위 패딩(Padding) 처리 후 UART 전송.
-2.  **Rx Script (Image Viewer):**
-    * UART 수신 데이터를 버퍼링.
-    * Header 파싱 및 Raw Binary를 이미지로 변환하여 화면 출력.
+1.  **Ingress Stage (UART $\rightarrow$ FIFO)**
+    * **Input:** 1-bit Serial
+    * **Output:** 8-bit Parallel (Byte)
+    * **Protocol:** `Valid` signal only (Push only)
+2.  **Security Stage (Batcher $\rightarrow$ AES $\rightarrow$ Serializer)**
+    * **Input:** 8-bit $\times$ 16 (Accumulated) $\rightarrow$ 128-bit Block
+    * **Processing:** AES-128 Encryption (Multi-cycle operation)
+    * **Output:** 128-bit Block $\rightarrow$ 2-bit Stream
+    * **Protocol:** `Ready/Valid` Handshake (Back-pressure 지원 필수)
+3.  **Modem Stage (QPSK Mod/Demod)**
+    * **Input:** 2-bit Symbol
+    * **Throughput:** Symbol Rate에 따름 (가변)
+    * **Output:** 16-bit Waveform Sample
 
 ---
 
-## 6. 개발 로드맵 (Development Roadmap)
+## 3. 동작 조건 및 제약 사항 (Operating Conditions)
 
-보안 기능(AES)과 고급 통신 기술(Synchronization)을 단계적으로 구현한다.
+코딩 전 반드시 확정해야 하는 **Boundary Condition**을 정의한다.
 
-* **Phase 1: Core Design (Security & Interface)**
-    * `UART RX/TX` 모듈 설계 및 검증.
-    * **`AES-128 Encryption/Decryption Core` 설계.** (Testbench를 통한 벡터 검증 필수)
-* **Phase 2: Modem Design (Basic Communication)**
-    * `QPSK Modulator` (Tx) 구현: DDS 및 Mixer 통합.
-    * `QPSK Demodulator` (Rx) 기본 구현: 이상적인 채널(No Noise)에서의 Loopback 테스트.
-* **Phase 3: Synchronization (The Hard Part)**
-    * Python/MATLAB을 이용한 **Costas/Gardner Loop 시뮬레이션** 및 Loop Filter 계수($K_p, K_i$) 산출.
-    * FPGA 내 **Carrier Recovery** 및 **Timing Recovery** 블록 구현.
-* **Phase 4: System Integration**
-    * 전체 통합: `PC -> Encrypt -> Mod -> Channel(Noise) -> Demod(Sync) -> Decrypt -> PC`.
-    * 최종 시연: 실시간 이미지 전송 및 도청(Sniffing) 시나리오 시연.
+### 3.1 Global Constraints
+* **Clock Domain:** 전체 시스템은 <strong>Single Clock Domain (100 MHz)</strong>에서 동작한다. (UART 샘플링만 Oversampling 기법 사용)
+* **Reset Policy:** **Synchronous Active High**. 리셋 해제 시 모든 FSM은 IDLE 상태로, FIFO는 Flush 상태로 시작한다.
+
+### 3.2 Traffic & Idle Handling
+* **Idle Condition:** PC로부터 데이터가 들어오지 않는 구간(UART Idle) 동안, Tx 모듈은 <strong>Unmodulated Carrier (Data=00/11에 해당하는 특정 위상 혹은 무변조 파형)</strong>를 지속 송출한다.
+    * *이유:* 수신부 Costas Loop의 Lock 유지를 위함.
+* **Padding Requirement:** AES-128 블록 처리를 위해, <strong>Host PC(Python)는 반드시 16 Bytes 단위로 데이터를 패딩(Zero-padding)</strong>하여 전송해야 한다. FPGA는 패딩 제거 로직을 수행하지 않는다.
+
+---
+
+## 4. 성능 목표 및 타이밍 분석 (Throughput & Latency Analysis)
+
+이 시스템의 <strong>병목(Bottleneck)</strong>을 분석하여 설계 마진을 확보한다.
+
+### 4.1 Throughput Analysis (속도 분석)
+* **Input Rate (UART):**
+    * Baudrate: 115,200 bps $\approx$ **11.5 KB/s**
+    * Byte Interval: 1 Byte 수신에 약 **87 $\mu s$** 소요 ($= 1/11520 -> 86.8\mu s$)
+    * Block Interval: 16 Bytes(1 AES Block) 수신에 약 **1.4 ms** 소요.
+* **Processing Capability (AES Core):**
+    * Target Performance: 1 Block(128-bit) 처리에 **50 Clock** 소요 가정.
+    * Processing Time: $50 \times 10ns = 500 ns$.
+    * **Conclusion:** 입력(1.4ms) 대비 처리속도(0.5$\mu s$)가 압도적으로 빠름. **AES는 성능 병목이 아님.**
+* **Output Rate (QPSK):**
+    * Carrier Freq: 1 MHz.
+    * Symbol Rate: 1 Msps 가정 시, 1 Symbol(2-bit) 전송에 $1 \mu s$.
+    * 1 Block(128-bit = 64 Symbols) 전송 시간: $64 \mu s$.
+    * **System Bottleneck:** <strong>UART (1.4 ms)</strong> > QPSK (64 $\mu s$) > AES (0.5 $\mu s$).
+    * **설계 결론:** 시스템은 UART 입력을 <strong>기다리는 구조(Input-Limited)</strong>가 되며, 데이터가 폭주할 일은 없으므로 FIFO Depth는 **32~64** 수준이면 충분하다.
+
+### 4.2 Latency Constraints (지연 시간)
+* **AES Latency:** Multi-cycle 구현으로 인해 수십 클럭의 지연 발생 $\rightarrow$ FIFO로 흡수.
+* **Filter Latency:** 수신부 FIR Filter 및 Loop Filter에서 발생하는 Group Delay는 복호화 시점 지연을 유발함. $\rightarrow$ 초기 Handshake 과정에서 Dummy Data를 통해 Sync를 맞춘 후 유효 데이터 수신 시작.
+
+---
+
+## 5. 상세 블록 사양 (Block Level Specs)
+
+### 5.1 UART_RX & FIFO
+* **Role:** 비동기 직렬 신호를 동기화하고, 속도 차이를 완충.
+* **Spec:** 16-level oversampling, Majority Voting(3-sample) 적용하여 노이즈 내성 확보.
+
+### 5.2 AES-128 Core
+* **Role:** 128-bit 데이터 암호화.
+* **Structure:** Round 함수를 10번 반복하는 **Iterative Architecture** 채택 (Area 최적화).
+* **Key:** 내부에 하드코딩된 128-bit Master Key 사용.
+
+### 5.3 QPSK Modem (Tx/Rx)
+* **Tx:** LUT 기반 DDS (Sine/Cos), 16-bit Signed Output.
+* **Rx:**
+    * **Costas Loop:** 2nd Order Loop Filter 적용.
+    * **Gardner Loop:** Farrow Interpolator 기반 Timing Recovery.
