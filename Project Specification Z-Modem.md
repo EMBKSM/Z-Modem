@@ -1,127 +1,96 @@
-# Project Specification: Z-Modem
+# Project Specification (v1.1)
+
+## Project Name: **Z-Modem**
+### Subtitle: FPGA-based Secure QPSK Image Transceiver
+
+---
 
 ## 1. 개요 (Project Overview)
+본 프로젝트는 PC로부터 전송된 이미지 데이터를 FPGA 내부에서 **하드웨어 가속 기반의 암호화(AES-128)**를 거친 후, **QPSK 변조**하여 무선 환경(Channel)으로 송신한다. 수신부는 이를 **복조(Demodulation) 및 동기화(Synchronization)**하고 **복호화(Decryption)**하여 원본 이미지를 복원한다. 이를 통해 **보안성이 강화된 실시간 디지털 데이터 송수신 시스템**을 구현하는 것을 최종 목표로 한다.
 
-본 프로젝트는 **PC에서 전송된 이미지 바이너리 데이터**를 FPGA를 통해 **QPSK 변조** 및 **주파수 상향 변환(Up-conversion)**하여 송신하고, 이를 수신부에서 **주파수 하향 변환(Down-conversion)** 및 **복조(Demodulation)**하여 원본 이미지를 복원한 뒤 PC로 재전송하는 **디지털 통신 시스템**을 구현하는 것을 목표로 한다.
+---
 
-## 2. 시스템 구성도 (System Architecture)
+## 2. 시스템 아키텍처 (System Architecture)
 
-전체 데이터 흐름(Dataflow)은 다음과 같이 정의한다.
+전체 데이터 흐름(Dataflow)은 **[Security Layer]**가 추가된 구조를 갖는다.
 
+```text
+[PC (Tx)] 
+   | (Image Binary)
+   v
+[UART RX] -> [ FIFO & Batcher ] -> [ AES-128 Encryption ] -> [ Symbol Splitter ] -> [ QPSK Modulator ]
+                                                                                         |
+                                                                                    (Channel: AWGN/Offset)
+                                                                                         |
+[UART TX] <- [ Decrypt Buffer ] <- [ AES-128 Decryption ] <- [ Symbol Decision ] <- [ QPSK Demodulator ]
+   |                                                                                (Costas/Gardner Loop)
+   v
+[PC (Rx)] (Image Restore)
 ```
-[PC (Tx)]  ->  [UART (Tx)]  ->  [FPGA (Tx System)]  ->  [Channel (DAC/ADC or Loopback)]
-                                                                    |
-[PC (Rx)]  <-  [UART (Rx)]  <-  [FPGA (Rx System)]  <-  ------------+
-```
 
-### 2.1 상세 블록 다이어그램 (Detailed Block Diagram)
+### 2.1 상세 데이터 흐름 (Data Path)
+AES-128은 **128비트(16바이트)** 단위로 동작하므로, 데이터 폭(Width) 변환 및 버퍼링이 핵심이다.
 
-1. **송신부 (Transmitter, Tx)**
-    - **UART RX:** PC로부터 8-bit 병렬 데이터 수신.
-    - **FIFO Buffer:** UART(Slow)와 QPSK(Fast) 간의 속도 차이 완충.
-    - **Symbol Mapper:** 2-bit 단위로 입력받아 I/Q 심볼 매핑 (예: $\pm 1$).
-    - **DDS (Carrier Gen):** 반송파($\cos, \sin$) 생성.
-    - **Mixer (Up-converter):** $I\cdot\cos - Q\cdot\sin$ 연산 수행.
-    - **Tx Output:** 디지털 변조 신호 출력 (DAC 인터페이스).
-2. **채널 (Channel Environment)**
-    - **옵션 A (Internal Loopback):** FPGA 내부에서 Tx 출력을 바로 Rx 입력으로 연결 (노이즈 없음, 검증용).
-    - **옵션 B (Analog Loopback):** DAC 핀 출력 -> 전선 -> ADC 핀 입력 (실제 아날로그 환경).
-    - **결정:** 1단계는 **Internal Loopback**으로 로직 검증 후, 2단계에서 Analog로 확장.
-3. **수신부 (Receiver, Rx)**
-    - **Mixer (Down-converter):** 수신 신호에 다시 $\cos, \sin$을 곱함.
-    - **LPF (Low Pass Filter):** 고주파 성분(2배 주파수) 제거 및 기저대역(Baseband) I/Q 추출.
-    - **Symbol Decision (Slicer):** I/Q 값의 부호를 판별하여 `00, 01, 10, 11` 복원.
-    - **Deserializer:** 2-bit 데이터를 모아 8-bit 바이트로 재조립.
-    - **UART TX:** 복원된 데이터를 PC로 전송.
+1.  **Buffering (SIPO):** UART(8-bit)로 들어오는 데이터를 16바이트 모아 **128-bit Block** 생성.
+2.  **Encryption:** `128-bit Plaintext` + `Key` $\rightarrow$ **AES Core** $\rightarrow$ `128-bit Ciphertext`.
+3.  **Serialization (PISO):** 암호문을 2-bit 단위로 쪼개어 QPSK 변조기로 전달.
+4.  **Channel & Demodulation:** 노이즈와 위상 오차가 있는 채널을 통과한 뒤, 동기화 루프를 통해 심볼 복원.
+5.  **Decryption:** 복원된 비트를 다시 128-bit로 모아 AES 복호화 수행 후 PC로 전송.
+
+---
 
 ## 3. 하드웨어 사양 (H/W Specification)
 
-| **항목** | **사양 (Spec)** | **비고** |
-| --- | --- | --- |
-| **FPGA Board** | Zybo Z7-20 (Zynq-7000) |  |
-| **System Clock** | 100 MHz | PL(Programmable Logic) 기본 클럭 |
-| **Communication** | UART (Over USB) | Baudrate: **115200 bps** |
-| **Data Format** | 8-bit, No Parity, 1 Stop | Standard UART Protocol |
-| **Modulation** | QPSK (Quadrature PSK) | 2 bits per Symbol |
-| **Carrier Freq** | **1 MHz** (가변 가능) | 오실로스코프 관측 및 연산 부하 고려 |
-| **Sampling Rate** | 100 Msps | System Clock과 동일 (단순화) |
-| **Filter** | FIR Low Pass Filter | Cut-off: Carrier Freq의 20% 수준 설정 |
-
-## 4. 소프트웨어 사양 (S/W Specification)
-
-FPGA 검증을 위해 PC에서 돌아갈 Python 스크립트가 필요합니다.
-
-1. **Tx Script:**
-    - 이미지 파일(.jpg/.png)을 읽어서 **Grayscale Raw Binary**로 변환.
-    - UART 포트를 통해 1바이트씩 전송.
-2. **Rx Script:**
-    - UART 포트에서 들어오는 데이터를 수신.
-    - 수신된 바이너리 데이터를 버퍼링.
-    - 지정된 크기(예: 128x128)가 차면 이미지로 변환하여 화면에 출력.
-
-## 5. 성능 목표 및 제약사항 (Constraints)
-
-- **Throughput (전송 속도):**
-    - UART 병목으로 인해 최대 속도는 **11.5 KB/s**로 제한됨.
-    - *예시:* 128x128 픽셀(16KB) 이미지 전송 시 약 **1.5초** 소요.
-- **Latency (지연 시간):**
-    - FPGA 내부 처리 지연은 $\mu s$ 단위이므로 무시 가능. UART 통신 시간이 지배적임.
-- **Synchronization (동기화) - 핵심 난관**:
-    - Rx에서 데이터를 복원하려면 Tx와 **정확히 똑같은 주파수와 위상**의 Carrier가 필요함.
-    - **초기 전략:** Tx와 Rx가 같은 FPGA 내에 있으므로 **DDS 모듈 하나를 공유**하거나, **같은 Clock 소스를 사용**하여 동기화 문제를 회피함. (이후 Costas Loop 등 고급 기술 도입 고려)
-
-# [Upgraded] Project Specification: Z-Modem
-
-## 1. 프로젝트 핵심 변경점 (Key Updates)
-
-- **Rx 동기화:** Tx와 Rx는 서로 다른 클럭 도메인(Clock Domain)으로 간주한다.
-- **필수 구현 알고리즘 (RTL):**
-    1. **Gardner Loop:** 최적의 샘플링 타이밍을 찾기 위한 **Timing Recovery**.
-    2. **Costas Loop:** 주파수 오차(Frequency Offset)와 위상 오차(Phase Offset)를 잡기 위한 **Carrier Recovery**.
-    3. **Matched Filter (RRC):** 신호 대 잡음비(SNR) 최적화 및 ISI(심볼 간 간섭) 제거.
-
-## 2. 시스템 구성도 (System Architecture)
-
-```
-[ 수신부 (Rx) 내부 데이터 흐름 ]
-
-(ADC Input) -> [ Down-Conversion (Mixer) ] -> [ Matched Filter (RRC) ]
-                         ^                                |
-                         | (Coarse freq correction)       v
-                         |                       [ Interpolator (Farrow) ] <---+
-[ Carrier Recovery ]     |                                |                    |
-(Costas Loop)            +----------------------- [ Mixer (Fine Tune) ]        |
-   - Phase Error Detector                                 |                    |
-   - Loop Filter (PI Controller)                          v                    |
-   - NCO (Sine/Cos Gen)                          [ Timing Error Detector ] ----+
-                                                 (Gardner Algorithm)
-                                                 - Loop Filter
-                                                 - NCO (Sample time control)
-```
-
-### 2.1 상세 구현 목표 (To-Do List)
-
-### ① 채널 모사 (Channel Emulator) - **필수**
-
-완벽한 신호만 들어오면 Costas Loop가 동작하는지 모름
-
-일부러 신호를 망가뜨려야 한다.
-
-- **AWGN:** 백색 소음 추가.
-- **Frequency Offset:** Tx는 1MHz로 쏘는데, Rx 믹서가 1.0001MHz로 동작하는 상황 연출.
-- **Phase Offset:** 시작 위상을 45도 틀어서 보냄.
-
-### ② Gardner Loop (Timing Recovery)
-
-- **문제:** ADC가 데이터를 찍는 순간이 심볼의 '눈(Eye)' 정중앙이 아닐 수 있음
-- **해결:** 들어온 샘플 3개(Early, Late, Center)를 비교해서 "조금 더 늦게 찍어" 혹은 "빨리 찍어"라고 피드백을 주기
-- **핵심 기술:** FPGA 내에서 소수점 단위 지연을 만드는 **Farrow Filter**나 **Interpolation** 기술이 필요
-
-### ③ Costas Loop (Carrier Recovery)
-
-- **문제:** 주파수가 조금만 달라도 성상도(점 4개)가 계속 회전
-- **해결:** I축과 Q축 값을 곱해서 에러(Error)를 계산
-    - Error > 0 이면: "NCO 주파수 낮추기"
-    - Error < 0 이면: "NCO 주파수 좀 높이기."
+| 항목 | 상세 사양 | 비고 |
+| :--- | :--- | :--- |
+| **FPGA Board** | Zybo Z7-20 (Zynq-7000) | PL(Programmable Logic) 활용 |
+| **System Clock** | 100 MHz | AES Core 및 Modem 동작 클럭 |
+| **Interface** | UART (Over USB) | Baudrate: **115200 bps** |
+| **Security** | **AES-128** (Advanced Encryption Standard) | **ECB or CTR Mode** (RTL 직접 구현) |
+| **Modulation** | QPSK (Quadrature PSK) | Carrier Freq: **1 MHz** |
+| **Synchronization** | **Costas Loop** (Carrier Recovery)<br>**Gardner Loop** (Timing Recovery) | 수신부 핵심 알고리즘 (독립 클럭 도메인 가정) |
+| **Filter** | Root Raised Cosine (RRC) | 대역폭 제한 및 ISI 제거 |
 
 ---
+
+## 4. 암호화 시나리오 (Security Scenario)
+
+* **알고리즘:** **AES-128** (표준 대칭키 암호화 알고리즘)
+* **Key Management:**
+    * **Step 1:** Tx와 Rx 모듈 내부에 **동일한 128-bit Master Key를 하드코딩**하여 사용.
+    * **Step 2 (Advanced):** 외부 스위치(Dip Switch)나 UART 명령어를 통한 키 변경 기능 구현 고려.
+* **검증 포인트:**
+    * **Sniffing Test:** 암호화된 상태(Channel 상의 신호)를 복조하여 데이터를 확인했을 때, 원본 이미지가 아닌 **Random Noise** 형태여야 함.
+    * **Restoration Test:** 정상적인 복호화 과정을 거친 경우에만 깨끗한 원본 이미지가 출력되어야 함.
+
+---
+
+## 5. 소프트웨어 사양 (S/W Specification)
+
+FPGA 검증 및 데이터 송수신을 위한 PC 측 Python 스크립트.
+
+1.  **Tx Script (Image Loader):**
+    * 이미지 파일(.jpg/.png) 로드 및 흑백(Grayscale) 변환.
+    * 128-bit(16 Byte) 단위 패딩(Padding) 처리 후 UART 전송.
+2.  **Rx Script (Image Viewer):**
+    * UART 수신 데이터를 버퍼링.
+    * Header 파싱 및 Raw Binary를 이미지로 변환하여 화면 출력.
+
+---
+
+## 6. 개발 로드맵 (Development Roadmap)
+
+보안 기능(AES)과 고급 통신 기술(Synchronization)을 단계적으로 구현한다.
+
+* **Phase 1: Core Design (Security & Interface)**
+    * `UART RX/TX` 모듈 설계 및 검증.
+    * **`AES-128 Encryption/Decryption Core` 설계.** (Testbench를 통한 벡터 검증 필수)
+* **Phase 2: Modem Design (Basic Communication)**
+    * `QPSK Modulator` (Tx) 구현: DDS 및 Mixer 통합.
+    * `QPSK Demodulator` (Rx) 기본 구현: 이상적인 채널(No Noise)에서의 Loopback 테스트.
+* **Phase 3: Synchronization (The Hard Part)**
+    * Python/MATLAB을 이용한 **Costas/Gardner Loop 시뮬레이션** 및 Loop Filter 계수($K_p, K_i$) 산출.
+    * FPGA 내 **Carrier Recovery** 및 **Timing Recovery** 블록 구현.
+* **Phase 4: System Integration**
+    * 전체 통합: `PC -> Encrypt -> Mod -> Channel(Noise) -> Demod(Sync) -> Decrypt -> PC`.
+    * 최종 시연: 실시간 이미지 전송 및 도청(Sniffing) 시나리오 시연.
