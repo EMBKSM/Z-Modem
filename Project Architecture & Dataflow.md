@@ -14,6 +14,7 @@
 [UART RX] --(8bit)--> [Byte Batcher] --(128bit)--> [AES Core] --(128bit)--> [Symbol Serializer] --(2bit)--> [QPSK Mod]
 (Slow Stream)         (SIPO Buffer)                (Processing)             (PISO Buffer)               (Real-time)
 ```
+<img width="4401" height="381" alt="Untitled diagram-2025-11-28-184301" src="https://github.com/user-attachments/assets/3f53a24e-a634-40ca-a19a-765ad8223421" />
 
 ---
 
@@ -83,3 +84,13 @@
 | `symbol_data` | 2 | Source $\rightarrow$ Sink | 매핑을 위한 2-bit 심볼 데이터 |
 | `symbol_valid` | 1 | Source $\rightarrow$ Sink | High: 변조 수행 / Low: Carrier Only 송출 |
 | `mod_ready` | 1 | Sink $\rightarrow$ Source | Modem의 다음 심볼 요청 신호 (Clock Enable) |
+
+## 4. Dataflow
+### Scene 1: Ingress
+<img width="1320" height="292" alt="wavedrom" src="https://github.com/user-attachments/assets/0b78fe94-0616-4fc7-812e-2afbc3dd43e5" />
+
+### Scene 2: Processing
+<img width="1360" height="292" alt="wavedrom (1)" src="https://github.com/user-attachments/assets/3dfe6d17-3ee7-43da-b560-6b0cf0091bbe" />
+
+### Scene 3: Egress
+<img width="1360" height="322" alt="wavedrom (2)" src="https://github.com/user-attachments/assets/a46eba70-38c5-4bc7-9930-bb2f72ef68c8" />
