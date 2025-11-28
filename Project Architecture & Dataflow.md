@@ -6,7 +6,7 @@
 
 ## 1. 데이터 흐름 및 아키텍처 개요 (Architecture Overview)
 
-본 시스템의 데이터 경로는 **Stream(UART) $\rightarrow$ Burst(AES) $\rightarrow$ Stream(QPSK)**의 3단계 파이프라인으로 구성된다. 각 스테이지 간에는 **Handshake Protocol**을 적용하여 클럭 도메인이 단일함에도 발생할 수 있는 데이터 유실 및 타이밍 문제를 원천 차단한다.
+본 시스템의 데이터 경로는 <strong>Stream(UART) $\rightarrow$ Burst(AES) $\rightarrow$ Stream(QPSK)</strong>의 3단계 파이프라인으로 구성된다. 각 스테이지 간에는 **Handshake Protocol**을 적용하여 클럭 도메인이 단일함에도 발생할 수 있는 데이터 유실 및 타이밍 문제를 원천 차단한다.
 
 ### 1.1 전체 파이프라인 구조 (Pipeline Structure)
 
