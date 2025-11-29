@@ -1,4 +1,4 @@
-# Interface Control Document (ICD) v1.1
+# Interface Control Document (v1.1)
 
 **Project:** Project Constellation (Z-Modem)
 **Status:** **LOCKED** (설계 확정)
