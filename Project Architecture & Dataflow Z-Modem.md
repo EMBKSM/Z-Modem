@@ -65,8 +65,9 @@
 - **Logic:**
     1. **Mapping:** 입력된 2-bit 심볼(`symbol_data`)을 I/Q 좌표(±1)로 매핑.
     2. **DDS:** 1MHz 주파수의 Sine/Cosine 파형 생성.
-    3. **Mixing:** (I × cos) - (Q × sin) 연산을 통해 변조된 파형(`tx_out`) 출력.
-    4. **Flow Control:** `mod_ready` 신호를 생성하여 Serializer에게 다음 심볼 요청.
+    3. **Pulse Shaping:** RRC(Root Raised Cosine) 필터를 적용하여 대역폭 제한 및 심볼 간 간섭(ISI) 방지.
+    4. **Mixing:** (I × cos) - (Q × sin) 연산을 통해 변조된 파형(`tx_out`) 출력.
+    5. **Flow Control:** `mod_ready` 신호를 생성하여 Serializer에게 다음 심볼 요청.
 
 ### 2.2 수신부 (Rx Blocks)
 
@@ -76,6 +77,7 @@
 - **Logic:**
     1. **Synchronization:** Costas Loop가 Carrier Lock 상태일 때 유효한 심볼(`demod_symbol`) 출력.
     2. **Valid Signal:** 동기화가 완료된 유효 데이터 구간에서만 `demod_valid`를 High로 출력.
+    3. **Matched Filtering:** 송신부와 동일한 RRC 필터를 통과시켜 SNR 극대화 및 ISI 제거.
 
 **F. Symbol De-serializer (Rx Ingress)**
 
