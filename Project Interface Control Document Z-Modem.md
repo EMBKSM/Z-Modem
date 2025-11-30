@@ -88,8 +88,8 @@
 | mod_req | 1 | Input | Modem의 데이터 요청 신호 |
 
 ### 3.5 QPSK Modulator (qpsk_modulator.v)
-**Type:** Stream Sink / DAC Source
-**Desc:** I/Q 매핑 및 반송파 변조. 능동적으로 데이터를 요청함.
+**Type:** Stream Sink / PDM Source
+**Desc:** I/Q 매핑, 반송파 변조 및 PDM 변환. 능동적으로 데이터를 요청함.
 
 | Signal Name | Width | Direction | Description |
 | :--- | :--- | :--- | :--- |
@@ -99,7 +99,7 @@
 | symbol_in | 2 | Input | From Serializer |
 | symbol_en | 1 | Input | = symbol_valid |
 | mod_req | 1 | Output | "다음 심볼 내놔" (To Serializer) |
-| tx_out | 16 | Output | To DAC (Signed Waveform) |
+| pdm_out | 1 | Output | To Antenna (1-bit PDM) |
 
 ## 4. 수신부 모듈 인터페이스 (Rx Module Interfaces)
 

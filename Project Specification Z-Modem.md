@@ -17,7 +17,7 @@
 | | `sys_reset` | Input | Active High | Global Synchronous Reset |
 | **Data Link** | `uart_rx` | Input | 115200 bps | PC $\rightarrow$ FPGA 데이터 수신 |
 | | `uart_tx` | Output | 115200 bps | FPGA $\rightarrow$ PC 데이터 송신 |
-| **RF Out** | `dac_data` | Output | 16-bit Signed | 변조된 I/Q 합산 파형 ($I\cos - Q\sin$) |
+| **RF Out** | `pdm_out` | Output | 1-bit Digital | PDM Signal via Delta-Sigma Modulator (Antenna Drive) |
 | **RF In** | `adc_data` | Input | 16-bit Signed | 수신된 I/Q 파형 (or Loopback) |
 
 ### 2.2 내부 데이터 흐름 및 버스 규격 (Internal Dataflow)

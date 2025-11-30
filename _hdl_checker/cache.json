@@ -1,0 +1,89 @@
+{
+ "builder": {
+  "_version": "<undefined>",
+  "_logger": "hdl_checker.builders.fallback",
+  "_work_folder": "c:\\work\\github\\Z-Modem\\_hdl_checker",
+  "_builtin_libraries": [],
+  "_added_libraries": [
+   {
+    "name": "not_in_project",
+    "case_sensitive": true,
+    "__class__": "Identifier"
+   }
+  ],
+  "__class__": "Fallback"
+ },
+ "config_file": [
+  {
+   "name": "C:\\Users\\user\\AppData\\Local\\Temp\\hdl_checker_project_pid22916_vab4p4jq.json",
+   "__class__": "Path"
+  },
+  1764511418.2501795,
+  "generated"
+ ],
+ "database": {
+  "sources": [],
+  "inferred_libraries": [],
+  "design_units": [
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\qpsk_modulator.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "qpsk_modulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\tb_dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "tb_dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      2,
+      7
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   }
+  ],
+  "__class__": "Database"
+ },
+ "__version__": "0.7.4"
+}
