@@ -6,6 +6,11 @@
   "_builtin_libraries": [],
   "_added_libraries": [
    {
+    "name": "default_library",
+    "case_sensitive": false,
+    "__class__": "Identifier"
+   },
+   {
     "name": "not_in_project",
     "case_sensitive": true,
     "__class__": "Identifier"
@@ -15,24 +20,228 @@
  },
  "config_file": [
   {
-   "name": "C:\\Users\\user\\AppData\\Local\\Temp\\hdl_checker_project_pid22916_vab4p4jq.json",
+   "name": "C:\\Users\\user\\AppData\\Local\\Temp\\hdl_checker_project_pid22184_z7z_b17d.json",
    "__class__": "Path"
   },
-  1764511418.2501795,
+  1764551928.943512,
   "generated"
  ],
  "database": {
-  "sources": [],
-  "inferred_libraries": [],
+  "sources": [
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\tb_dds.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764227272.1829114,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_qpsk_modulator.sv",
+     "__class__": "Path"
+    },
+    "mtime": 1764567154.1291854,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\dds.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764513327.0779724,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\qpsk_modulator.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764513596.0218396,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_dds.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764227272.1829114,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\qpsk_modulator.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764513596.0218396,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   },
+   {
+    "path": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\dds.v",
+     "__class__": "Path"
+    },
+    "mtime": 1764513327.0779724,
+    "flags": {
+     "source_specific": [],
+     "single": [],
+     "dependencies": []
+    },
+    "dependencies": [],
+    "diags": []
+   }
+  ],
+  "inferred_libraries": [
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpf624zgf5.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpuxl0r41d.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpw2zrbpyu.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpu9908m7a.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp1vmxtwei.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpakp8x_1n.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp1b0dh3r4.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\qpsk_modulator.v",
+    "__class__": "Path"
+   },
+   {
+    "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_dds.v",
+    "__class__": "Path"
+   },
+   {
+    "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\qpsk_modulator.v",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpd1ruvpfv.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpgw96713d.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp_te6xno3.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\dds.v",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp0jeyzzyi.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp6gq75hv6.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpk55_5bq5.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_qpsk_modulator.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmplnp5nmu4.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp5xothow9.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpk2i0tsqj.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpuivtme_f.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp02tkzu9c.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpx6s730r1.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmpk8jys044.sv",
+    "__class__": "Path"
+   },
+   {
+    "name": "C:\\Users\\user\\AppData\\Local\\Temp\\tmp7rsnqul_.sv",
+    "__class__": "Path"
+   }
+  ],
   "design_units": [
    {
     "owner": {
-     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\qpsk_modulator.v",
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\adc\\adc_interface.v",
      "__class__": "Path"
     },
     "type_": "entity",
     "name": {
-     "name": "qpsk_modulator",
+     "name": "adc_interface",
      "case_sensitive": true,
      "__class__": "VerilogIdentifier"
     },
@@ -40,6 +249,63 @@
      [
       0,
       6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_demodulator\\qpsk_demodulator.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "qpsk_demodulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_qpsk_modulator.sv",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "tb_qpsk_modulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      2,
+      7
      ]
     ],
     "__class__": "VerilogDesignUnit"
@@ -65,12 +331,202 @@
    },
    {
     "owner": {
-     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\dds.v",
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_demodulator\\simple_lpf.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "simple_lpf",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\dds.v",
      "__class__": "Path"
     },
     "type_": "entity",
     "name": {
      "name": "dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\tb_dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "tb_dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      2,
+      7
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\costas_loop\\dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_demodulator\\dds.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "dds",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_demodulator\\tb_qpsk_demodulator.sv",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "tb_qpsk_demodulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      2,
+      7
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\costas_loop\\loop_filter.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "loop_filter",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\costas_loop\\costas_loop.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "costas_loop",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\qpsk_modulator\\qpsk_modulator.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "qpsk_modulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      0,
+      6
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\tb_qpsk_modulator.sv",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "tb_qpsk_modulator",
+     "case_sensitive": true,
+     "__class__": "VerilogIdentifier"
+    },
+    "locations": [
+     [
+      2,
+      7
+     ]
+    ],
+    "__class__": "VerilogDesignUnit"
+   },
+   {
+    "owner": {
+     "name": "c:\\work\\github\\Z-Modem\\Z-modem_ip-workspace\\dds\\qpsk_modulator.v",
+     "__class__": "Path"
+    },
+    "type_": "entity",
+    "name": {
+     "name": "qpsk_modulator",
      "case_sensitive": true,
      "__class__": "VerilogIdentifier"
     },
