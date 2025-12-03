@@ -92,10 +92,10 @@ module qpsk_modulator(
         end else begin            
             if (sigma_acc >= 0) begin
                 pdm_out <= 1;
-                sigma_acc <= sigma_acc + tx_sample - 17'd32767;
+                sigma_acc <= sigma_acc + tx_sample - 17'sd32767;
             end else begin
                 pdm_out <= 0;
-                sigma_acc <= sigma_acc + tx_sample + 17'd32767;
+                sigma_acc <= sigma_acc + tx_sample + 17'sd32767;
             end
         end
     end
