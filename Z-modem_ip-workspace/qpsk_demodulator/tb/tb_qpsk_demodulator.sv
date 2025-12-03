@@ -99,13 +99,13 @@ module tb_qpsk_demodulator;
     // Test sequence
     initial begin
         // Initialize
-        reset = 1;
+        reset = 0; // Active Low Reset
         fcw = 0;
         tx_symbol_in = 0;
         tx_symbol_en = 0;
 
         #100;
-        reset = 0;
+        reset = 1; // Release Reset
 
         // Configure Carrier Frequency (1 MHz)
         // FCW = (1M * 2^32) / 100M = 42949673

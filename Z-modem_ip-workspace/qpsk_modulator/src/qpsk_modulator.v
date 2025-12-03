@@ -36,8 +36,8 @@ module qpsk_modulator(
         .data_cos(dds_cos)
     );
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             symbol_cnt <= 0;
             mod_req <= 0;
         end else begin
@@ -51,8 +51,8 @@ module qpsk_modulator(
         end
     end
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             i_val <= AMP;
             q_val <= AMP;
         end else begin
@@ -70,8 +70,8 @@ module qpsk_modulator(
         end
     end
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             i_mix <= 0;
             q_mix <= 0;
             tx_sum <= 0;
@@ -85,8 +85,8 @@ module qpsk_modulator(
 
     assign tx_sample = tx_sum >>> 15;
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             sigma_acc <= 0;
             pdm_out <= 0;
         end else begin            

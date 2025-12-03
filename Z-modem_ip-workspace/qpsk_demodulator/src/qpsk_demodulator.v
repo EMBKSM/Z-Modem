@@ -34,8 +34,8 @@ module qpsk_demodulator(
     reg signed [31:0] i_mix;
     reg signed [31:0] q_mix;
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             i_mix <= 0;
             q_mix <= 0;
         end else begin
@@ -85,8 +85,8 @@ module qpsk_demodulator(
     // 10: I=-AMP, Q=-AMP
     // 11: I=AMP, Q=-AMP
     
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             symbol_out <= 0;
             symbol_valid <= 0;
         end else begin

@@ -27,9 +27,11 @@ module costas_loop(
     reg signed [31:0] term1;
     reg signed [31:0] term2;
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             phase_error <= 0;
+            term1 <= 0;
+            term2 <= 0;
         end else begin
             // Q * sign(I)
             // If I is positive (0), term1 = Q. If I is negative (1), term1 = -Q.
@@ -38,8 +40,8 @@ module costas_loop(
             
             // Error = term1 - term2
             
-            term1 = (i_sign == 0) ? q_in : -q_in;
-            term2 = (q_sign == 0) ? i_in : -i_in;
+            term1 <= (i_sign == 0) ? q_in : -q_in;
+            term2 <= (q_sign == 0) ? i_in : -i_in;
             
             phase_error <= term1 - term2;
         end
