@@ -19,8 +19,8 @@ module dds (
         $readmemh("sine_lut.mem", sin_rom);
     end
 
-    always @(posedge clk) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
             phase_acc <= 0;
             data_sin <= 0;
             data_cos <= 0;
