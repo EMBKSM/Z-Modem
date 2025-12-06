@@ -43,14 +43,8 @@ module adc_interface (
     // NOTE: Kept commented out to avoid synthesis errors until IP is generated.
     // Uncomment the above block and generate 'xadc_wiz_0' in Vivado.
 
+    // ADC Output Register
     always @(posedge clk) begin
-        // XADC reset is usually active high, but if we want global active low, we should invert it for XADC if needed.
-        // But here we are just registering the output.
-        // Let's assume reset is not used for this simple register or add it if needed.
-        // The user asked for ALL code.
-        // But wait, the original code didn't have reset in this always block.
-        // "always @(posedge clk) begin adc_data_out <= xadc_data; end"
-        // If I add reset:
         if (!reset) begin
             adc_data_out <= 0;
         end else begin

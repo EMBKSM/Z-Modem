@@ -33,13 +33,13 @@ module tb_qpsk_modulator;
     end
     
     initial begin
-        reset = 1; // Active High Reset
+        reset = 0; // Active Low Reset
         fcw = 0;
         symbol_in = 0;
         symbol_en = 0;
 
         #100;
-        reset = 0; // Release Reset
+        reset = 1; // Release Reset
         fcw = 32'd42949673;
         #100;
         symbol_en = 1;

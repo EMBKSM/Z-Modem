@@ -18,9 +18,7 @@ module uart_rx #(
     reg [2:0] bit_idx;
     reg [2:0] sample_idx; // 0 to 15 for 16x oversampling
     
-    // Double flop for metastability
-    reg rx_sync_1, rx_sync_2;
-    
+    // Synchronizer Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             rx_sync_1 <= 1;
@@ -31,6 +29,7 @@ module uart_rx #(
         end
     end
 
+    // UART RX Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             state <= IDLE;
@@ -40,7 +39,7 @@ module uart_rx #(
             rx_data <= 0;
             rx_valid <= 0;
         end else begin
-            rx_valid <= 0; // Default
+            rx_valid <= 0; 
 
             case (state)
                 IDLE: begin
@@ -48,22 +47,20 @@ module uart_rx #(
                     bit_idx <= 0;
                     sample_idx <= 0;
                     
-                    if (rx_sync_2 == 0) begin // Start bit detected
+                    if (rx_sync_2 == 0) begin 
                         state <= START;
                     end
                 end
 
                 START: begin
-                    // Wait for middle of start bit
                     if (clk_cnt < CLKS_PER_BIT / 2) begin
                         clk_cnt <= clk_cnt + 1;
                     end else begin
-                        // Check if it's still low (valid start bit)
                         if (rx_sync_2 == 0) begin
                             clk_cnt <= 0;
                             state <= DATA;
                         end else begin
-                            state <= IDLE; // False start
+                            state <= IDLE; 
                         end
                     end
                 end
@@ -90,7 +87,7 @@ module uart_rx #(
                     end else begin
                         clk_cnt <= 0;
                         state <= IDLE;
-                        rx_valid <= 1; // Data valid pulse
+                        rx_valid <= 1; 
                     end
                 end
             endcase

@@ -27,19 +27,13 @@ module costas_loop(
     reg signed [31:0] term1;
     reg signed [31:0] term2;
 
+    // Phase Detector Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             phase_error <= 0;
             term1 <= 0;
             term2 <= 0;
         end else begin
-            // Q * sign(I)
-            // If I is positive (0), term1 = Q. If I is negative (1), term1 = -Q.
-            // I * sign(Q)
-            // If Q is positive (0), term2 = I. If Q is negative (1), term2 = -I.
-            
-            // Error = term1 - term2
-            
             term1 <= (i_sign == 0) ? q_in : -q_in;
             term2 <= (q_sign == 0) ? i_in : -i_in;
             

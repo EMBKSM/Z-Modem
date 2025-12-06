@@ -19,13 +19,14 @@ module uart_tx #(
     reg [2:0] bit_idx;
     reg [7:0] tx_data_latched;
 
+    // UART TX Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             state <= IDLE;
             clk_cnt <= 0;
             bit_idx <= 0;
             tx_busy <= 0;
-            tx_serial <= 1; // Idle High
+            tx_serial <= 1; 
             tx_data_latched <= 0;
         end else begin
             case (state)
@@ -44,7 +45,7 @@ module uart_tx #(
                 end
 
                 START: begin
-                    tx_serial <= 0; // Start bit Low
+                    tx_serial <= 0; 
                     
                     if (clk_cnt < CLKS_PER_BIT - 1) begin
                         clk_cnt <= clk_cnt + 1;
@@ -71,7 +72,7 @@ module uart_tx #(
                 end
 
                 STOP: begin
-                    tx_serial <= 1; // Stop bit High
+                    tx_serial <= 1; 
                     
                     if (clk_cnt < CLKS_PER_BIT - 1) begin
                         clk_cnt <= clk_cnt + 1;

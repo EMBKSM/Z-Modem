@@ -15,10 +15,11 @@ module qpsk_modulator(
     localparam signed [15:0] AMP = 16'd16000;
 
     // FSM States
-    localparam IDLE = 1'b0;
-    localparam RUN  = 1'b1;
+    localparam IDLE     = 2'b00;
+    localparam MODULATE = 2'b01;
+    localparam UPDATE   = 2'b10;
 
-    reg current_state, next_state;
+    reg [1:0] current_state, next_state;
 
     wire signed [15:0] dds_sin;
     wire signed [15:0] dds_cos;
@@ -44,7 +45,7 @@ module qpsk_modulator(
 
     assign tx_sample = tx_sum >>> 15;
 
-    // 1. State Register (Sequential)
+    // State Register
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             current_state <= IDLE;
@@ -53,26 +54,27 @@ module qpsk_modulator(
         end
     end
 
-    // 2. Next State Logic (Combinational)
+    // Next State Logic
     always @(*) begin
         next_state = current_state;
         case (current_state)
             IDLE: begin
-                // Always transition to RUN to start modulation immediately or wait for enable?
-                // Original logic: IDLE -> RUN immediately.
-                next_state = RUN;
+                next_state = MODULATE;
             end
 
-            RUN: begin
-                // Stay in RUN unless some stop condition exists.
-                // Original logic didn't have a stop condition back to IDLE, it just looped in RUN.
-                // So effectively it stays in RUN.
-                next_state = RUN;
+            MODULATE: begin
+                if (symbol_cnt >= SYMBOL_PERIOD - 2) begin
+                    next_state = UPDATE;
+                end
+            end
+
+            UPDATE: begin
+                next_state = MODULATE;
             end
         endcase
     end
 
-    // 3. Datapath Logic (Sequential)
+    // Datapath Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             symbol_cnt <= 0;
@@ -85,7 +87,6 @@ module qpsk_modulator(
             sigma_acc <= 0;
             pdm_out <= 0;
         end else begin
-            // Symbol Counter & Control
             case (current_state)
                 IDLE: begin
                     symbol_cnt <= 0;
@@ -94,36 +95,33 @@ module qpsk_modulator(
                     q_val <= AMP;
                 end
 
-                RUN: begin
-                    if (symbol_cnt >= SYMBOL_PERIOD - 1) begin
-                        symbol_cnt <= 0;
-                        mod_req <= 1;
-                        
-                        // Update Symbols
-                        if (symbol_en) begin
-                            case (symbol_in)
-                                2'b00: begin i_val <=  AMP; q_val <=  AMP; end
-                                2'b01: begin i_val <= -AMP; q_val <=  AMP; end
-                                2'b10: begin i_val <= -AMP; q_val <= -AMP; end
-                                2'b11: begin i_val <=  AMP; q_val <= -AMP; end
-                            endcase
-                        end else begin
-                            i_val <= AMP;
-                            q_val <= AMP;
-                        end
+                MODULATE: begin
+                    symbol_cnt <= symbol_cnt + 1;
+                    mod_req <= 0;
+                end
+
+                UPDATE: begin
+                    symbol_cnt <= 0;
+                    mod_req <= 1;
+                    
+                    if (symbol_en) begin
+                        case (symbol_in)
+                            2'b00: begin i_val <=  AMP; q_val <=  AMP; end
+                            2'b01: begin i_val <= -AMP; q_val <=  AMP; end
+                            2'b10: begin i_val <= -AMP; q_val <= -AMP; end
+                            2'b11: begin i_val <=  AMP; q_val <= -AMP; end
+                        endcase
                     end else begin
-                        symbol_cnt <= symbol_cnt + 1;
-                        mod_req <= 0;
+                        i_val <= AMP;
+                        q_val <= AMP;
                     end
                 end
             endcase
 
-            // Mixer Logic
             i_mix <= i_val * dds_cos;
             q_mix <= q_val * dds_sin;
             tx_sum <= i_mix - q_mix;
 
-            // PDM Logic
             if (sigma_acc >= 0) begin
                 pdm_out <= 1;
                 sigma_acc <= sigma_acc + tx_sample - 17'sd32767;

@@ -22,7 +22,7 @@ module symbol_serializer (
     reg [127:0] shift_reg;
     reg [5:0]   symbol_cnt; // 0 to 63
 
-    // 1. State Register
+    // State Register
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             current_state <= IDLE;
@@ -31,7 +31,7 @@ module symbol_serializer (
         end
     end
 
-    // 2. Next State Logic
+    // Next State Logic
     always @(*) begin
         next_state = current_state;
         case (current_state)
@@ -49,7 +49,7 @@ module symbol_serializer (
         endcase
     end
 
-    // 3. Data Path & Output Logic
+    // Datapath Logic
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             shift_reg <= 0;
@@ -65,8 +65,8 @@ module symbol_serializer (
                     
                     if (load_en) begin
                         buffer_ready <= 0;
-                        shift_reg <= {cipher_data[125:0], 2'b00}; // Shift out first 2 bits immediately
-                        symbol_data <= cipher_data[127:126];      // Output first symbol
+                        shift_reg <= {cipher_data[125:0], 2'b00}; 
+                        symbol_data <= cipher_data[127:126];      
                         symbol_valid <= 1;
                         symbol_cnt <= 63;
                     end
@@ -77,13 +77,10 @@ module symbol_serializer (
                     
                     if (mod_req) begin
                         if (symbol_cnt > 0) begin
-                            // Shift and Output next symbol
                             symbol_data <= shift_reg[127:126];
                             shift_reg <= {shift_reg[125:0], 2'b00};
                             symbol_cnt <= symbol_cnt - 1;
                         end else begin
-                            // Last symbol transmitted, transition to IDLE handled by Next State
-                            // Cleanup outputs
                             buffer_ready <= 1;
                             symbol_valid <= 0;
                             symbol_data <= 0;

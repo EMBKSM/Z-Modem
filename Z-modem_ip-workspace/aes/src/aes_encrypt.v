@@ -58,6 +58,7 @@ module aes_encrypt (
 
     assign last_round = (round_cnt == 10);
 
+    // AES Control FSM
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             state <= IDLE;
@@ -70,11 +71,11 @@ module aes_encrypt (
             case (state)
                 IDLE: begin
                     done <= 0;
-                    if (start) begin // Handshake: Valid asserted
+                    if (start) begin 
                         state <= ROUNDS;
-                        ready <= 0; // Busy
-                        state_reg <= initial_state; // Load and do Round 0
-                        round_cnt <= 1; // Start from Round 1
+                        ready <= 0; 
+                        state_reg <= initial_state; 
+                        round_cnt <= 1; 
                     end else begin
                         ready <= 1;
                     end
@@ -92,12 +93,11 @@ module aes_encrypt (
                 end
                 
                 DONE: begin
-                    if (out_ready) begin // Handshake: Downstream ready
+                    if (out_ready) begin 
                         state <= IDLE;
                         done <= 0;
                         ready <= 1;
                     end
-                    // Else stay in DONE and hold 'done' high
                 end
             endcase
         end
