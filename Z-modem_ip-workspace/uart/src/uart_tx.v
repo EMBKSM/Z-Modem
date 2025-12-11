@@ -3,10 +3,14 @@ module uart_tx #(
 ) (
     input  wire       clk,
     input  wire       reset,
-    input  wire [7:0] tx_data,
-    input  wire       tx_start,
-    output reg        tx_busy,
-    output reg        tx_serial
+    
+    // AXI-Stream Slave Interface
+    input  wire       s_axis_tvalid,
+    output reg        s_axis_tready,
+    input  wire [7:0] s_axis_tdata,
+    
+    output reg        tx_serial,
+    output reg        tx_busy // Optional, can be useful for debug
 );
 
     localparam IDLE  = 2'b00;
@@ -25,22 +29,24 @@ module uart_tx #(
             state <= IDLE;
             clk_cnt <= 0;
             bit_idx <= 0;
-            tx_busy <= 0;
+            s_axis_tready <= 0;
             tx_serial <= 1; 
             tx_data_latched <= 0;
+            tx_busy <= 0;
         end else begin
             case (state)
                 IDLE: begin
                     clk_cnt <= 0;
                     bit_idx <= 0;
                     tx_serial <= 1;
+                    tx_busy <= 0;
+                    s_axis_tready <= 1; // Ready to accept new data
                     
-                    if (tx_start) begin
+                    if (s_axis_tvalid && s_axis_tready) begin
                         state <= START;
                         tx_busy <= 1;
-                        tx_data_latched <= tx_data;
-                    end else begin
-                        tx_busy <= 0;
+                        s_axis_tready <= 0; // Busy processing
+                        tx_data_latched <= s_axis_tdata;
                     end
                 end
 
@@ -80,6 +86,7 @@ module uart_tx #(
                         clk_cnt <= 0;
                         state <= IDLE;
                         tx_busy <= 0;
+                        // s_axis_tready will go high in IDLE state
                     end
                 end
             endcase

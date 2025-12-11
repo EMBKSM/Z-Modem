@@ -4,9 +4,11 @@ module byte_unpacker (
     input  wire [127:0] plain_block,
     input  wire         load_en,
     output reg          buffer_ready,
-    output reg  [7:0]   tx_data,
-    output reg          tx_start,
-    input  wire         uart_busy
+    
+    // AXI-Stream Master Interface (to UART TX)
+    output reg  [7:0]   m_axis_tdata,
+    output reg          m_axis_tvalid,
+    input  wire         m_axis_tready
 );
 
     // FSM States
@@ -56,15 +58,21 @@ module byte_unpacker (
             shift_reg <= 0;
             byte_cnt <= 0;
             buffer_ready <= 1;
-            tx_data <= 0;
-            tx_start <= 0;
+            m_axis_tdata <= 0;
+            m_axis_tvalid <= 0;
         end else begin
-            tx_start <= 0;
+            
+            // Handshake Logic: Clear valid if ready is asserted
+            if (m_axis_tvalid && m_axis_tready) begin
+                m_axis_tvalid <= 0;
+            end
 
             case (current_state)
                 IDLE: begin
                     buffer_ready <= 1;
                     byte_cnt <= 0;
+                    m_axis_tvalid <= 0;
+                    
                     if (load_en) begin
                         shift_reg <= plain_block;
                         buffer_ready <= 0;
@@ -73,11 +81,13 @@ module byte_unpacker (
 
                 RUN: begin
                     buffer_ready <= 0;
+                    
                     if (byte_cnt < 16) begin
-                        if (!uart_busy && !tx_start) begin
-                            tx_data <= shift_reg[127:120]; 
+                        // Try to send data if not currently valid or if handshake just happened
+                        if (!m_axis_tvalid || (m_axis_tvalid && m_axis_tready)) begin
+                            m_axis_tdata <= shift_reg[127:120]; 
                             shift_reg <= {shift_reg[119:0], 8'b0}; 
-                            tx_start <= 1;
+                            m_axis_tvalid <= 1;
                             byte_cnt <= byte_cnt + 1;
                         end
                     end
@@ -85,6 +95,7 @@ module byte_unpacker (
 
                 DONE: begin
                     buffer_ready <= 1;
+                    m_axis_tvalid <= 0;
                 end
             endcase
         end

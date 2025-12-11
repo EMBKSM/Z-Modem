@@ -4,8 +4,9 @@ module tb_byte_batcher;
 
     reg clk;
     reg reset;
-    reg [7:0] rx_data;
-    reg rx_valid;
+    reg [7:0] s_axis_tdata;
+    reg s_axis_tvalid;
+    wire s_axis_tready; // Added Ready Signal
     wire [127:0] batch_data;
     wire batch_valid;
     reg aes_ready;
@@ -13,8 +14,9 @@ module tb_byte_batcher;
     byte_batcher uut (
         .clk(clk),
         .reset(reset),
-        .rx_data(rx_data),
-        .rx_valid(rx_valid),
+        .s_axis_tdata(s_axis_tdata),
+        .s_axis_tvalid(s_axis_tvalid),
+        .s_axis_tready(s_axis_tready),
         .batch_data(batch_data),
         .batch_valid(batch_valid),
         .aes_ready(aes_ready)
@@ -30,10 +32,14 @@ module tb_byte_batcher;
     initial begin
         $dumpfile("tb_byte_batcher.vcd");
         $dumpvars(0, tb_byte_batcher);
+        
+        // Debug Monitor
+        $monitor("Time=%0t | Valid=%b | Ready=%b | Data=%h | Count=%d | BatchValid=%b | BatchData=%h", 
+                 $time, s_axis_tvalid, s_axis_tready, s_axis_tdata, uut.byte_cnt, batch_valid, batch_data);
 
         reset = 0; // Active Low Reset
-        rx_data = 0;
-        rx_valid = 0;
+        s_axis_tdata = 0;
+        s_axis_tvalid = 0;
         aes_ready = 1; // AES is ready initially
 
         #100;
@@ -42,26 +48,25 @@ module tb_byte_batcher;
 
         // Test Case 1: Send 16 bytes
         for (i = 0; i < 16; i = i + 1) begin
+            wait(s_axis_tready); // Wait for Ready
             @(posedge clk);
-            rx_data = i; // Send 0x00, 0x01, ... 0x0F
-            rx_valid = 1;
+            s_axis_tdata = i; // Send 0x00, 0x01, ... 0x0F
+            s_axis_tvalid = 1;
             @(posedge clk);
-            rx_valid = 0;
+            s_axis_tvalid = 0;
             #10; // Wait a bit between bytes
         end
 
         // Wait for batch_valid
         wait(batch_valid);
         $display("Batch Valid Asserted! Data: %h", batch_data);
+        
+        // Check if Ready goes low when full
+        #1;
+        if (s_axis_tready == 0) $display("PASS: Ready is Low (Full).");
+        else $display("FAIL: Ready should be Low (Full).");
 
         // Verify Data
-        // Expected: 00010203...0F (if MSB first) or ... depending on shift direction
-        // Implementation shifted left: {shift_reg[119:0], rx_data}
-        // So first byte (00) is at MSB?
-        // Cycle 0: reg = {0...0, 00}
-        // ...
-        // Cycle 15: reg = {00, 01, ..., 0F}
-        // So 00 is at MSB [127:120].
         if (batch_data === 128'h000102030405060708090A0B0C0D0E0F) begin
             $display("PASS: Data matches expected value.");
         end else begin
@@ -74,6 +79,11 @@ module tb_byte_batcher;
         @(posedge clk);
         if (batch_valid == 0) $display("PASS: Handshake cleared valid.");
         else $display("FAIL: Valid not cleared.");
+        
+        // Check if Ready goes high after handshake
+        #1;
+        if (s_axis_tready == 1) $display("PASS: Ready is High (Empty).");
+        else $display("FAIL: Ready should be High (Empty).");
 
         #50;
         $finish;

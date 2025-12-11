@@ -7,9 +7,11 @@ module tb_byte_unpacker;
     reg [127:0] plain_block;
     reg load_en;
     wire buffer_ready;
-    wire [7:0] tx_data;
-    wire tx_start;
-    reg uart_busy;
+    
+    // AXI-Stream Master Interface
+    wire [7:0] m_axis_tdata;
+    wire m_axis_tvalid;
+    reg m_axis_tready;
 
     byte_unpacker uut (
         .clk(clk),
@@ -17,9 +19,9 @@ module tb_byte_unpacker;
         .plain_block(plain_block),
         .load_en(load_en),
         .buffer_ready(buffer_ready),
-        .tx_data(tx_data),
-        .tx_start(tx_start),
-        .uart_busy(uart_busy)
+        .m_axis_tdata(m_axis_tdata),
+        .m_axis_tvalid(m_axis_tvalid),
+        .m_axis_tready(m_axis_tready)
     );
 
     initial begin
@@ -29,26 +31,18 @@ module tb_byte_unpacker;
 
     integer i;
 
-    // Mock UART Logic
-    initial begin
-        uart_busy = 0;
-        forever begin
-            @(posedge clk);
-            if (tx_start) begin
-                uart_busy = 1;
-                repeat(10) @(posedge clk); // Simulate UART transmission time
-                uart_busy = 0;
-            end
-        end
-    end
-
     initial begin
         $dumpfile("tb_byte_unpacker.vcd");
         $dumpvars(0, tb_byte_unpacker);
+        
+        // Debug Monitor
+        $monitor("Time=%0t | State=%b | Valid=%b | Ready=%b | Data=%h | ByteCnt=%d", 
+                 $time, uut.current_state, m_axis_tvalid, m_axis_tready, m_axis_tdata, uut.byte_cnt);
 
         reset = 0;
         plain_block = 0;
         load_en = 0;
+        m_axis_tready = 0; // Initially not ready
 
         #100;
         reset = 1;
@@ -65,13 +59,24 @@ module tb_byte_unpacker;
         // Verify Output Stream
         // We expect 00, 01, ..., 0F
         for (i = 0; i < 16; i = i + 1) begin
-            wait(tx_start);
-            $display("Byte %0d Sent: %h", i, tx_data);
-            if (tx_data !== i) $display("FAIL: Mismatch at byte %0d", i);
+            // Wait for Valid data
+            wait(m_axis_tvalid);
+            #1; // Small delay to ensure stability
             
-            // Wait for busy to clear (handled by mock logic above)
-            wait(uart_busy == 0);
-            @(posedge clk); // Wait one cycle for FSM to catch up
+            // Read and Check Data BEFORE asserting Ready
+            $display("Byte %0d Received: %h", i, m_axis_tdata);
+            if (m_axis_tdata !== i) $display("FAIL: Mismatch at byte %0d", i);
+            
+            // Now assert Ready to acknowledge/consume the data
+            @(posedge clk); 
+            m_axis_tready = 1;
+            
+            // Hold Ready for one cycle to complete handshake
+            @(posedge clk);
+            m_axis_tready = 0;
+            
+            // Random delay before ready for next byte
+            repeat(2) @(posedge clk);
         end
 
         wait(buffer_ready);

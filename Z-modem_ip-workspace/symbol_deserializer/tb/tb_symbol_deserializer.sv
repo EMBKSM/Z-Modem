@@ -31,15 +31,19 @@ module tb_symbol_deserializer;
     initial begin
         $dumpfile("tb_symbol_deserializer.vcd");
         $dumpvars(0, tb_symbol_deserializer);
+        
+        // Debug Monitor
+        $monitor("Time=%0t | Rst=%b | Valid=%b | Sym=%b | Count=%d | BlockValid=%b | Ready=%b | Block=%h", 
+                 $time, reset, symbol_valid, symbol_in, uut.count, block_valid, dec_ready, cipher_block);
 
-        reset = 1;
+        reset = 0; // Active Low Reset: Assert Reset
         symbol_in = 0;
         symbol_valid = 0;
         dec_ready = 0;
         expected_data = 128'h0123456789ABCDEF0123456789ABCDEF;
 
         #100;
-        reset = 0;
+        reset = 1; // Release Reset
         #20;
 
         // Test Case 1: Send 64 symbols (128 bits)

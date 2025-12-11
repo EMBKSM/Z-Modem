@@ -15,6 +15,8 @@ module aes_inv_core (
     // Row 1 (1,5,9,13): Right 1 (becomes 13, 1, 5, 9)
     // Row 2 (2,6,10,14): Right 2 (becomes 10, 14, 2, 6)
     // Row 3 (3,7,11,15): Right 3 (becomes 7, 11, 15, 3)
+    // Row 3 (3,7,11,15): Right 3 (becomes 7, 11, 15, 3)
+    wire [127:0] inv_shift_rows_out;
     assign inv_shift_rows_out[127:120] = state_in[127:120]; // 0
     assign inv_shift_rows_out[95:88]   = state_in[95:88];   // 4
     assign inv_shift_rows_out[63:56]   = state_in[63:56];   // 8

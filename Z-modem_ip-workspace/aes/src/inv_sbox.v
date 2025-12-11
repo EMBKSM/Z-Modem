@@ -67,7 +67,7 @@ module inv_sbox (
             8'hec: out_byte = 8'h83; 8'hed: out_byte = 8'h53; 8'hee: out_byte = 8'h99; 8'hef: out_byte = 8'h61;
             8'hf0: out_byte = 8'h17; 8'hf1: out_byte = 8'h2b; 8'hf2: out_byte = 8'h04; 8'hf3: out_byte = 8'h7e;
             8'hf4: out_byte = 8'hba; 8'hf5: out_byte = 8'h77; 8'hf6: out_byte = 8'hd6; 8'hf7: out_byte = 8'h26;
-            8'hf8: out_byte = 8'he1; 8'hf9: out_byte = 8'h69; 8'fa: out_byte = 8'h14; 8'fb: out_byte = 8'h63;
+            8'hf8: out_byte = 8'he1; 8'hf9: out_byte = 8'h69; 8'hfa: out_byte = 8'h14; 8'hfb: out_byte = 8'h63;
             8'hfc: out_byte = 8'h55; 8'hfd: out_byte = 8'h21; 8'hfe: out_byte = 8'h0c; 8'hff: out_byte = 8'h7d;
         endcase
     end

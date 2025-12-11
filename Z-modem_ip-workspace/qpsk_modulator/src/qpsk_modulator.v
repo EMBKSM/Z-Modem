@@ -5,7 +5,8 @@ module qpsk_modulator(
     input  wire [1:0]  symbol_in,
     input  wire        symbol_en,
     output reg         mod_req,
-    output reg         pdm_out
+    output reg         pdm_out,
+    output wire signed [15:0] tx_sample_out // Debug Output
 );
 
     parameter SYSTEM_CLK_FREQ = 100_000_000;
@@ -44,6 +45,7 @@ module qpsk_modulator(
     );
 
     assign tx_sample = tx_sum >>> 15;
+    assign tx_sample_out = tx_sample;
 
     // State Register
     always @(posedge clk or negedge reset) begin

@@ -51,6 +51,10 @@ module tb_symbol_serializer();
         reset = 1; // Release Reset
         #20;
         
+        // Debug Monitor
+        $monitor("Time=%0t | State=%b | LoadEn=%b | Ready=%b | Valid=%b | Data=%b | ModReq=%b", 
+                 $time, u_dut.current_state, load_en, buffer_ready, symbol_valid, symbol_data, mod_req);
+        
         // Test Case 1: Load Data
         wait(buffer_ready);
         cipher_data = 128'hC0_30_0C_03_F0_0F_AA_55_12_34_56_78_9A_BC_DE_F0;
