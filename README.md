@@ -42,6 +42,29 @@ Z-Modem is an FPGA-based secure wireless communication modem project. It impleme
 ### 4. Serializer (`symbol_serializer`)
 *   **Function:** Bridges the 128-bit AES block interface and the 2-bit QPSK symbol stream interface.
 
+## Implementation Results
+
+### Power Consumption
+| Metric | Value | Percentage |
+| :--- | :--- | :--- |
+| **Total On-Chip Power** | **1.62 W** | |
+| Dynamic | 1.477 W | 91% |
+| Static | 0.143 W | 9% |
+| **Junction Temperature** | **43.7°C** | |
+
+### Resource Utilization (Key Modules)
+| Module | LUT | FF |
+| :--- | :--- | :--- |
+| **AES Encrypt** (`aes_encrypt`) | 4071 | 255 |
+| **AES Decrypt** (`aes_decrypt`) | 4138 | 273 |
+| **QPSK Modulator** (`qpsk_modulator`) | 565 | 150 |
+| **QPSK Demodulator** (`qpsk_demodulator`) | 335 | 209 |
+| **UART RX** (`uart_rx`) | 45 | 40 |
+| **UART TX** (`uart_tx`) | 25 | 26 |
+| **Symbol Serializer** (`symbol_serializer`) | 75 | 137 |
+| **Symbol Deserializer** (`symbol_deserializer`) | 8 | 251 |
+
+
 ## Simulation
 
 The project uses SystemVerilog testbenches. You can run simulations using Vivado's `xsim` or compatible simulators.

@@ -1,0 +1,30 @@
+// Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+// Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+// --------------------------------------------------------------------------------
+// Tool Version: Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+// Date        : Sun Dec 14 22:02:26 2025
+// Host        : EMBKSM running 64-bit major release  (build 9200)
+// Command     : write_verilog -force -mode synth_stub -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
+//               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ ZModem_top_qpsk_modulator_0_0_stub.v
+// Design      : ZModem_top_qpsk_modulator_0_0
+// Purpose     : Stub declaration of top-level module interface
+// Device      : xc7z020clg400-1
+// --------------------------------------------------------------------------------
+
+// This empty module with port declaration file causes synthesis tools to infer a black box for IP.
+// The synthesis directives are for Synopsys Synplify support to prevent IO buffer insertion.
+// Please paste the declaration into a Verilog source file or add the file as an additional source.
+(* CHECK_LICENSE_TYPE = "ZModem_top_qpsk_modulator_0_0,qpsk_modulator,{}" *) (* CORE_GENERATION_INFO = "ZModem_top_qpsk_modulator_0_0,qpsk_modulator,{x_ipProduct=Vivado 2025.1,x_ipVendor=xilinx.com,x_ipLibrary=user,x_ipName=qpsk_modulator,x_ipVersion=1.0,x_ipCoreRevision=3,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED,SYSTEM_CLK_FREQ=100000000,SYMBOL_RATE=1000000,SYMBOL_PERIOD=100}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) 
+(* IP_DEFINITION_SOURCE = "package_project" *) (* X_CORE_INFO = "qpsk_modulator,Vivado 2025.1" *) 
+module decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix(clk, reset, fcw, symbol_in, symbol_en, mod_req, 
+  pdm_out)
+/* synthesis syn_black_box black_box_pad_pin="reset,fcw[31:0],symbol_in[1:0],symbol_en,mod_req,pdm_out" */
+/* synthesis syn_force_seq_prim="clk" */;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *) (* X_INTERFACE_MODE = "slave" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET reset, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN ZModem_top_processing_system7_0_0_FCLK_CLK0, INSERT_VIP 0" *) input clk /* synthesis syn_isclock = 1 */;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 reset RST" *) (* X_INTERFACE_MODE = "slave" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME reset, POLARITY ACTIVE_LOW, INSERT_VIP 0" *) input reset;
+  input [31:0]fcw;
+  input [1:0]symbol_in;
+  input symbol_en;
+  output mod_req;
+  output pdm_out;
+endmodule

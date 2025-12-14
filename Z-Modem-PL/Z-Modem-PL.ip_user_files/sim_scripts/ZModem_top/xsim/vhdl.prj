@@ -1,0 +1,5 @@
+vhdl xil_defaultlib  \
+"../../../bd/ZModem_top/ip/ZModem_top_rst_ps7_0_100M_0/sim/ZModem_top_rst_ps7_0_100M_0.vhd" \
+
+# Do not sort compile order
+nosort

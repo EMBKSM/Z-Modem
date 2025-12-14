@@ -1,0 +1,83 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_Layers":"/rst_ps7_0_100M_peripheral_aresetn:true|/processing_system7_0_FCLK_RESET0_N:true|/processing_system7_0_FCLK_CLK0:true|",
+   "Default View_ScaleFactor":"0.77702",
+   "Default View_TopLeft":"64,350",
+   "Display-IntfAXIStream":"true",
+   "Display-IntfOthers":"true",
+   "Display-PortTypeClock":"true",
+   "Display-PortTypeOthers":"true",
+   "Display-PortTypeReset":"true",
+   "ExpandedHierarchyInLayout":"",
+   "Interfaces View_Layers":"/rst_ps7_0_100M_peripheral_aresetn:false|/processing_system7_0_FCLK_RESET0_N:false|/processing_system7_0_FCLK_CLK0:false|",
+   "Interfaces View_ScaleFactor":"0.987893",
+   "Interfaces View_TopLeft":"-120,-107",
+   "Interrupt and AXI-4 Lite_Layers":"/rst_ps7_0_100M_peripheral_aresetn:false|/processing_system7_0_FCLK_RESET0_N:false|/processing_system7_0_FCLK_CLK0:false|",
+   "Interrupt and AXI-4 Lite_ScaleFactor":"0.862579",
+   "Interrupt and AXI-4 Lite_TopLeft":"-121,-174",
+   "Reduced Jogs_Layers":"/rst_ps7_0_100M_peripheral_aresetn:true|/processing_system7_0_FCLK_RESET0_N:true|/processing_system7_0_FCLK_CLK0:true|",
+   "Reduced Jogs_ScaleFactor":"0.364394",
+   "Reduced Jogs_TopLeft":"-121,-121",
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 8 -x 2440 -y 500 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 8 -x 2440 -y 520 -defaultsOSRD
+preplace port port-id_v_n -pg 1 -lvl 0 -x -10 -y 890 -defaultsOSRD
+preplace port port-id_v_p -pg 1 -lvl 0 -x -10 -y 870 -defaultsOSRD
+preplace port port-id_rx_serial -pg 1 -lvl 0 -x -10 -y 600 -defaultsOSRD
+preplace port port-id_tx_serial -pg 1 -lvl 8 -x 2440 -y 370 -defaultsOSRD
+preplace port port-id_pdm_out -pg 1 -lvl 8 -x 2440 -y 140 -defaultsOSRD
+preplace inst uart_rx_0 -pg 1 -lvl 3 -x 820 -y 580 -defaultsOSRD
+preplace inst uart_tx_0 -pg 1 -lvl 7 -x 2210 -y 380 -defaultsOSRD
+preplace inst adc_interface_0 -pg 1 -lvl 2 -x 510 -y 860 -defaultsOSRD
+preplace inst aes_decrypt_0 -pg 1 -lvl 5 -x 1490 -y 380 -defaultsOSRD
+preplace inst aes_encrypt_0 -pg 1 -lvl 5 -x 1490 -y 150 -defaultsOSRD
+preplace inst byte_batcher_0 -pg 1 -lvl 4 -x 1160 -y 170 -defaultsOSRD
+preplace inst byte_unpacker_0 -pg 1 -lvl 6 -x 1830 -y 370 -defaultsOSRD
+preplace inst symbol_serializer_0 -pg 1 -lvl 6 -x 1830 -y 150 -defaultsOSRD
+preplace inst symbol_deserializer_0 -pg 1 -lvl 4 -x 1160 -y 400 -defaultsOSRD
+preplace inst qpsk_modulator_0 -pg 1 -lvl 7 -x 2210 -y 130 -defaultsOSRD
+preplace inst qpsk_demodulator_0 -pg 1 -lvl 3 -x 820 -y 410 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 7 -x 2210 -y 550 -defaultsOSRD
+preplace inst rst_ps7_0_100M -pg 1 -lvl 1 -x 200 -y 770 -defaultsOSRD
+preplace inst Constant_Inputs_0 -pg 1 -lvl 2 -x 510 -y 90 -defaultsOSRD
+preplace netloc Constant_Inputs_0_fcw 1 2 5 650 10 NJ 10 NJ 10 NJ 10 2000
+preplace netloc Constant_Inputs_0_key 1 2 3 630 70 NJ 70 1330
+preplace netloc adc_interface_0_adc_data_out 1 2 1 670 420n
+preplace netloc aes_decrypt_0_done 1 5 1 N 400
+preplace netloc aes_decrypt_0_plaintext 1 5 1 N 380
+preplace netloc aes_decrypt_0_ready 1 3 3 1020 20 NJ 20 1640
+preplace netloc aes_encrypt_0_ciphertext 1 5 1 N 150
+preplace netloc aes_encrypt_0_done 1 5 1 N 170
+preplace netloc aes_encrypt_0_ready 1 3 3 1010 500 NJ 500 1630
+preplace netloc byte_batcher_0_batch_data 1 4 1 N 160
+preplace netloc byte_batcher_0_batch_valid 1 4 1 N 180
+preplace netloc byte_unpacker_0_buffer_ready 1 4 3 1350 270 NJ 270 1980
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 30 870 370 560 660 310 980 60 1340 30 1660 50 1990 660 2420
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 20 880 380J 770 NJ 770 NJ 770 NJ 770 NJ 770 NJ 770 2410
+preplace netloc qpsk_demodulator_0_symbol_out 1 3 1 N 400
+preplace netloc qpsk_demodulator_0_symbol_valid 1 3 1 N 420
+preplace netloc qpsk_modulator_0_mod_req 1 5 3 1680 30 NJ 30 2420
+preplace netloc qpsk_modulator_0_pdm_out 1 7 1 NJ 140
+preplace netloc rst_ps7_0_100M_peripheral_aresetn 1 1 6 390 580 680 320 990 80 1320 260 1670 250 2010
+preplace netloc rx_serial_0_1 1 0 3 NJ 600 NJ 600 NJ
+preplace netloc symbol_deserializer_0_block_valid 1 4 1 N 410
+preplace netloc symbol_deserializer_0_cipher_block 1 4 1 N 390
+preplace netloc symbol_serializer_0_buffer_ready 1 4 3 1350 40 NJ 40 1980
+preplace netloc symbol_serializer_0_symbol_data 1 6 1 N 150
+preplace netloc symbol_serializer_0_symbol_valid 1 6 1 N 170
+preplace netloc uart_tx_0_tx_serial 1 7 1 NJ 370
+preplace netloc v_n_0_1 1 0 2 NJ 890 NJ
+preplace netloc v_p_0_1 1 0 2 10J 900 390J
+preplace netloc byte_unpacker_0_m_axis 1 6 1 N 360
+preplace netloc processing_system7_0_DDR 1 7 1 NJ 500
+preplace netloc processing_system7_0_FIXED_IO 1 7 1 NJ 520
+preplace netloc uart_rx_0_m_axis 1 3 1 1000 140n
+levelinfo -pg 1 -10 200 510 820 1160 1490 1830 2210 2440
+pagesize -pg 1 -db -bbox -sgen -130 0 2560 950
+"
+}
+{
+   "da_clkrst_cnt":"8",
+   "da_ps7_cnt":"1"
+}

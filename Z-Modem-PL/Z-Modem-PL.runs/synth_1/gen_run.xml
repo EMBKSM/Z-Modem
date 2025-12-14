@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1765719274">
+  <File Type="PA-TCL" Name="ZModem_top_wrapper.tcl"/>
+  <File Type="REPORTS-TCL" Name="ZModem_top_wrapper_reports.tcl"/>
+  <File Type="RDS-RDS" Name="ZModem_top_wrapper.vds"/>
+  <File Type="RDS-PROPCONSTRS" Name="ZModem_top_wrapper_drc_synth.rpt"/>
+  <File Type="RDS-UTIL" Name="ZModem_top_wrapper_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="ZModem_top_wrapper_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="ZModem_top_wrapper.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="ZModem_top_wrapper_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="ZModem_top_wrapper_timing_summary_synth.pb"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PSRCDIR/sources_1/bd/ZModem_top/ZModem_top.bd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PGENDIR/sources_1/bd/ZModem_top/hdl/ZModem_top_wrapper.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="ZModem_top_wrapper"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PSRCDIR/constrs_1/new/ZModem_constrs.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2025"/>
+    <Step Id="synth_design"/>
+  </Strategy>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_uart_rx_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_aes_encrypt_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_uart_tx_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_aes_decrypt_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_qpsk_modulator_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_symbol_serializer_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_byte_batcher_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_adc_interface_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_symbol_deserializer_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_byte_unpacker_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_processing_system7_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_rst_ps7_0_100M_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_Constant_Inputs_0_0"/>
+  <BlockFileSet Type="BlockSrcs" Name="ZModem_top_qpsk_demodulator_0_0"/>
+</GenRun>

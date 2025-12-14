@@ -5,7 +5,7 @@
     "cell_name": "xadc_inst",
     "component_reference": "xilinx.com:ip:xadc_wiz:3.3",
     "ip_revision": "12",
-    "gen_directory": "../../../../../z-modem/z-modem_ip-repo/adc/tmp_edit_project.gen/sources_1/ip/xadc_wiz_0",
+    "gen_directory": "../../../../../z-modem/z-modem-pl/z-modem-pl.tmp/adc_interface_v1_0_project/adc_interface_v1_0_project.gen/sources_1/ip/xadc_wiz_0",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "xadc_wiz_0", "resolve_type": "user", "usage": "all" } ],
@@ -266,7 +266,7 @@
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
         "IPREVISION": [ { "value": "12" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../z-modem/z-modem_ip-repo/adc/tmp_edit_project.gen/sources_1/ip/xadc_wiz_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../z-modem/z-modem-pl/z-modem-pl.tmp/adc_interface_v1_0_project/adc_interface_v1_0_project.gen/sources_1/ip/xadc_wiz_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
         "SWVERSION": [ { "value": "2025.1" } ],

@@ -1,0 +1,43 @@
+verilog xil_defaultlib -i "../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" --include "C:/Xilinx/2025.1/Vivado/data/xilinx_vip/include" --include "../../../../Z-Modem-PL.gen/sources_1/bd/ZModem_top/ipshared/ec67/hdl" --include "../../../../Z-Modem-PL.gen/sources_1/bd/ZModem_top/ipshared/6cfa/hdl" \
+"../../../bd/ZModem_top/ipshared/9fa5/src/uart_rx.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_uart_rx_0_0/sim/ZModem_top_uart_rx_0_0.v" \
+"../../../bd/ZModem_top/ipshared/4b30/src/uart_tx.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_uart_tx_0_0/sim/ZModem_top_uart_tx_0_0.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_adc_interface_0_0/src/xadc_wiz_0/xadc_wiz_0.v" \
+"../../../bd/ZModem_top/ipshared/68bf/src/adc_interface.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_adc_interface_0_0/sim/ZModem_top_adc_interface_0_0.v" \
+"../../../bd/ZModem_top/ipshared/4e40/src/aes_inv_core.v" \
+"../../../bd/ZModem_top/ipshared/4e40/src/aes_key_expand.v" \
+"../../../bd/ZModem_top/ipshared/4e40/src/inv_sbox.v" \
+"../../../bd/ZModem_top/ipshared/4e40/src/sbox.v" \
+"../../../bd/ZModem_top/ipshared/4e40/src/aes_decrypt.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_aes_decrypt_0_0/sim/ZModem_top_aes_decrypt_0_0.v" \
+"../../../bd/ZModem_top/ipshared/1a00/src/aes_core.v" \
+"../../../bd/ZModem_top/ipshared/1a00/src/aes_encrypt.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_aes_encrypt_0_0/sim/ZModem_top_aes_encrypt_0_0.v" \
+"../../../bd/ZModem_top/ipshared/a927/src/byte_batcher.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_byte_batcher_0_0/sim/ZModem_top_byte_batcher_0_0.v" \
+"../../../bd/ZModem_top/ipshared/b803/src/byte_unpacker.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_byte_unpacker_0_0/sim/ZModem_top_byte_unpacker_0_0.v" \
+"../../../bd/ZModem_top/ipshared/621c/src/symbol_serializer.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_symbol_serializer_0_0/sim/ZModem_top_symbol_serializer_0_0.v" \
+"../../../bd/ZModem_top/ipshared/bc43/src/symbol_deserializer.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_symbol_deserializer_0_0/sim/ZModem_top_symbol_deserializer_0_0.v" \
+"../../../bd/ZModem_top/ipshared/593b/src/dds.v" \
+"../../../bd/ZModem_top/ipshared/593b/src/qpsk_modulator.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_qpsk_modulator_0_0/sim/ZModem_top_qpsk_modulator_0_0.v" \
+"../../../bd/ZModem_top/ipshared/5003/src/simple_lpf.v" \
+"../../../bd/ZModem_top/ipshared/5003/src/qpsk_demodulator.v" \
+"../../../bd/ZModem_top/ipshared/5003/src/costas_loop.v" \
+"../../../bd/ZModem_top/ipshared/5003/src/dds.v" \
+"../../../bd/ZModem_top/ipshared/5003/src/loop_filter.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_qpsk_demodulator_0_0/sim/ZModem_top_qpsk_demodulator_0_0.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_processing_system7_0_0/sim/ZModem_top_processing_system7_0_0.v" \
+"../../../bd/ZModem_top/ipshared/daa7/src/Constant_Inputs.v" \
+"../../../bd/ZModem_top/ip/ZModem_top_Constant_Inputs_0_0/sim/ZModem_top_Constant_Inputs_0_0.v" \
+"../../../bd/ZModem_top/sim/ZModem_top.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
