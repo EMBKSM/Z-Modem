@@ -87,3 +87,44 @@ xsim tb_qpsk_modulator -R
 
 ## License
 Private Project. All rights reserved.
+
+## PC Software Tools
+
+This repository includes two C# WinForms applications for testing and verifying binary image transmission over UART.
+
+### 1. Image to Binary Converter (`image_cov`)
+A tool to convert standard image files (JPG, PNG, BMP) into raw binary pixel data and transmit it via UART.
+
+*   **Features:**
+    *   **Image Loading:** Supports common image formats.
+    *   **Resizing:** Downscale images to fit target displays (e.g., 128x160).
+    *   **Format Conversion:**
+        *   **RGB565:** 16-bit color (5-6-5).
+        *   **RGB888:** 24-bit color.
+        *   **Grayscale:** 8-bit brightness.
+    *   **Hex Preview:** View the first 256 bytes of the converted binary data.
+    *   **UART Transmission:** Send raw binary data to a connected device (FPGA or Receiver App).
+
+### 2. Binary Image Compositor (`bin_image_compos`)
+A receiver tool that listens on a UART port, accumulates raw binary data, and reconstructs the image.
+
+*   **Features:**
+    *   **Real-time Reception:** Buffers incoming bytes.
+    *   **Image Reconstruction:** Rebuilds the bitmap based on configured Width, Height, and Format.
+    *   **Display:** Visualizes the received binary data as an image.
+
+### Usage (Loopback Test)
+To verify the tools without external hardware, you can use a pair of Virtual COM Ports (e.g., com0com) or two USB-UART adapters connected TX-RX.
+
+1.  **Sender (`image_cov`):**
+    *   Connect to `COM_A`.
+    *   Load an image and set target size (e.g., 100x100).
+    *   Select Format (e.g., RGB565).
+    *   Click **Convert**.
+2.  **Receiver (`bin_image_compos`):**
+    *   Connect to `COM_B`.
+    *   Set **identical** Width (100), Height (100), and Format (RGB565).
+    *   Click **Connect**.
+3.  **Transmit:**
+    *   In Sender, click **Send Binary**.
+    *   The image should appear in the Receiver's window.
